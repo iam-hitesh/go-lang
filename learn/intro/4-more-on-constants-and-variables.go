@@ -1,3 +1,6 @@
+//fmt.Println prints the passed in variables’ values and appends a newline. 
+// fmt.Printf is used when you want to print one or multiple values using a defined format specifier.
+
 package main
 
 import "fmt"
