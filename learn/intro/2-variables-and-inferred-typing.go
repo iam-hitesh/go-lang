@@ -16,5 +16,10 @@ func main(){
     details string = "None";
   );
   fmt.Printf(details);
+
+  action := func() {
+    fmt.Printf("In Function")
+  }
+  action();
 }
   
