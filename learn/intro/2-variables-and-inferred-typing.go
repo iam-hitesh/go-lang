@@ -6,7 +6,8 @@ import "fmt"
 
 func main(){
   var name = "Hitesh";
-  fmt.Printf(name);
+  // Println for line break after print
+  fmt.Println(name);
   
   age := 21;
   // fmt.Printf(age) would not work
@@ -22,4 +23,7 @@ func main(){
   }
   action();
 }
-  
+
+// Output
+// Hitesh
+// 21NoneIn Function
