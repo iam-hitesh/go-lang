@@ -1,4 +1,5 @@
 // http://www.golangbootcamp.com/book/_single-page#sec-variables
+// https://blog.golang.org/gos-declaration-syntax
 
 package main
 
