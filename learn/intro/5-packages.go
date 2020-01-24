@@ -2,12 +2,14 @@ package main
 
 import (
     "fmt"
-    "math/rand"
+    "math"
 )
 
 func main() {
-	fmt.Printf("Hello, World!\n")
-  fmt.Print(rand.Intn(100), ",")
+  fmt.Println(math.Pi)
+  
+  // This will give error as pi is not available
+  // fmt.Println(math.pi)
 }
 
 /**
