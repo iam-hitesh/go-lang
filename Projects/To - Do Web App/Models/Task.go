@@ -1,8 +1,6 @@
 package Models
 
 import (
-	"fmt"
-	"github.com/go-sql-driver/mysql"
 	"../Config"
 )
 
@@ -10,7 +8,7 @@ type Task struct {
 	ID uint 			`json:"id"`
 	Title string 		`json:"Title"`
 	Description string 	`json:"Description"`
-	Completed boolean	`json:"Completed"`
+	Completed bool	`json:"Completed"`
 }
 
 func (table *Task) TableName() string {
