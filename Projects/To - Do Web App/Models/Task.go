@@ -23,7 +23,7 @@ func getAllTasks(tasks *[]Task) (err error) {
 	return nil
 }
 
-func createTask(task *Task) (err error) {
+func createTask(t *Task) (err error) {
 	if err = Config.DB.Create(task).Error; err != nil {
 		return err
 	}
