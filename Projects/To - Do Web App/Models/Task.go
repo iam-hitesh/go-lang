@@ -34,3 +34,26 @@ func CreateTask(task *Task) (err error) {
 
 	return nil
 }
+
+
+func GetATask(task *Task, id string) (err error) {
+	if err = Config.DB.Where("id = ?", id).First(task).Error; err != nil {
+		return err
+	}
+
+	return nil
+}
+
+
+func UpdateATask(task *Task) (err error) {
+	Config.DB.Save(task)
+
+	return nil
+}
+
+
+func DeleteATask(task *Task, id string) (err error) {
+	Config.DB.Where("id = ?", id).Delete(task)
+
+	return nil
+}

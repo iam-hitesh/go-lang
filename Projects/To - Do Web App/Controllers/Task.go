@@ -39,3 +39,55 @@ func GetAllTasks(req *gin.Context) {
 		req.JSON(http.StatusOK, tasks)
 	}
 }
+
+
+func GetATask(req *gin.Context) {
+	var task Models.Task
+
+	id := req.Params.ByName("id")
+
+	err := Models.GetATask(&task, id)
+
+	if err != nil {
+		req.AbortWithStatus(http.StatusNotFound)
+	} else {
+		req.JSON(http.StatusOK, task)
+	}
+}
+
+
+func UpdateATask(req *gin.Context) {
+	var task Models.Task
+
+	id := req.Params.ByName("id")
+
+	err := Models.GetATask(&task, id)
+
+	if err != nil {
+		req.JSON(http.StatusNotFound, task)
+	}
+
+	req.BindJSON(&task)
+	err = Models.UpdateATask(&task)
+
+	if err != nil {
+		req.AbortWithStatus(http.StatusBadRequest)
+	} else {
+		req.JSON(http.StatusOK, task)
+	}
+}
+
+
+func DeleteATask(req *gin.Context) {
+	var task Models.Task
+
+	id := req.Params.ByName("id")
+
+	err := Models.DeleteATask(&task, id)
+
+	if err != nil {
+		req.AbortWithStatus(http.StatusNotFound)
+	} else {
+		req.JSON(http.StatusOK, task)
+	}
+}
