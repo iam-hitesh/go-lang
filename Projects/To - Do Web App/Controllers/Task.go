@@ -2,20 +2,40 @@ package Controllers
 
 import (
 	"net/http"
+
 	"github.com/gin-gonic/gin"
+
 	"../Models"
 )
 
-func createTask(body *gin.context){
+
+func CreateTask(req *gin.Context) {
 	var task Models.Task
 
-	body.BindJSON(&task)
+	// Should be with conditional check otherwise give error:
+	// Headers were already written. Wanted to override status code 400 with 200
+	if err := req.Bind(&task); err != nil {
+		return
+	}
 
-	err := Models.CreateATodo(&todo)
+	err := Models.CreateTask(&task)
 
 	if err != nil {
-		c.AbortWithStatus(http.StatusNotFound)
+		req.AbortWithStatus(http.StatusBadRequest)
 	} else {
-		c.JSON(http.StatusOK, task)
+		req.JSON(http.StatusOK, task)
+	}
+}
+
+
+func GetAllTasks(req *gin.Context) {
+	var tasks []Models.Task
+
+	err := Models.GetAllTasks(&tasks)
+
+	if err != nil {
+		req.AbortWithStatus(http.StatusBadRequest)
+	} else {
+		req.JSON(http.StatusOK, tasks)
 	}
 }

@@ -1,0 +1,12 @@
+[GIN-debug] [WARNING] Creating an Engine instance with the Logger and Recovery middleware already attached.
+
+[GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export GIN_MODE=release
+ - using code:	gin.SetMode(gin.ReleaseMode)
+
+[GIN-debug] GET    /api/v1/                  --> _/Users/jarvis/Desktop/projects/go-lang/Projects/To_-_Do_Web_App/Controllers.Home (3 handlers)
+[GIN-debug] GET    /api/v1/about             --> _/Users/jarvis/Desktop/projects/go-lang/Projects/To_-_Do_Web_App/Controllers.About (3 handlers)
+[GIN-debug] POST   /api/v1/task/create       --> _/Users/jarvis/Desktop/projects/go-lang/Projects/To_-_Do_Web_App/Controllers.CreateTask (3 handlers)
+[GIN-debug] GET    /api/v1/task/list         --> _/Users/jarvis/Desktop/projects/go-lang/Projects/To_-_Do_Web_App/Controllers.GetAllTasks (3 handlers)
+[GIN-debug] Listening and serving HTTP on :8080
+[GIN] 2020/03/05 - 12:49:16 | 200 |     5.98851ms |             ::1 | POST     /api/v1/task/create

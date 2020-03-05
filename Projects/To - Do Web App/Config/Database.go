@@ -2,30 +2,34 @@ package Config
 
 import (
 	"fmt"
+
 	"github.com/jinzhu/gorm"
 )
 
 var DB *gorm.DB
 
+
+// DBConfig represents db configuration
 type DBConfig struct {
-	Host string
-	Port int
-	User string
-	DBName string
+	Host     string
+	Port     int
+	User     string
+	DBName   string
 	Password string
 }
 
-func BuildDBConfig() *DBConfig{
+
+func BuildDBConfig() *DBConfig {
 	dbConfig := DBConfig{
-		Host: "10.42.0.1",
-		Port: 3306,
-		User: "root",
-		DBName: "auction2",
+		Host:     "0.0.0.0",
+		Port:     3306,
+		User:     "root",
+		DBName:   "todos",
 		Password: "",
 	}
-
 	return &dbConfig
 }
+
 
 func DbURL(dbConfig *DBConfig) string {
 	return fmt.Sprintf(
