@@ -14,6 +14,7 @@ func CreateTask(req *gin.Context) {
 
 	// Should be with conditional check otherwise give error:
 	// Headers were already written. Wanted to override status code 400 with 200
+	// Content-Type: application/json
 	if err := req.Bind(&task); err != nil {
 		return
 	}
