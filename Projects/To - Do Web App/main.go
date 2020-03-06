@@ -27,14 +27,15 @@ func main() {
 
 
 	defer Config.DB.Close()
-	Config.DB.AutoMigrate(&Models.Task{})
+	Config.DB.Set("gorm:table_options", "ENGINE=InnoDB").AutoMigrate(&Models.User{}, &Models.Task{})
+	Config.DB.Model(&Models.Task{}).AddForeignKey("created_by", "user(id)", "RESTRICT", "RESTRICT")
 
 	// Logging to a file.
-	f, _ := os.Create("gin.log")
-	gin.DefaultWriter = io.MultiWriter(f)
+	file, _ := os.Create("gin.log")
+	gin.DefaultWriter = io.MultiWriter(file)
 
 	// Use the following code if you need to write the logs to file and console at the same time.
-	gin.DefaultWriter = io.MultiWriter(f, os.Stdout)
+	gin.DefaultWriter = io.MultiWriter(file, os.Stdout)
 
 	router := Routes.SetupRouter()
 

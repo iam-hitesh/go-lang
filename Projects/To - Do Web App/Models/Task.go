@@ -1,15 +1,19 @@
 package Models
 
 import (
+	"github.com/jinzhu/gorm"
+
 	"../Config"
 )
 
 
 type Task struct {
-	ID uint 			`json:"id"`
+	gorm.Model
+
 	Title string 		`json:"Title"`
 	Description string 	`json:"Description"`
 	Completed bool		`json:"Completed"`
+	CreatedBy int		`gorm:"foreignkey:Id; NOT NULL;"`
 }
 
 
