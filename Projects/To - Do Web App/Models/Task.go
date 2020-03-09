@@ -13,25 +13,26 @@ type Task struct {
 	Title string 		`json:"Title"`
 	Description string 	`json:"Description"`
 	Completed bool		`json:"Completed"`
-	CreatedBy int		`gorm:"foreignkey:Id; NOT NULL;"`
+	User User			`gorm:"foreignkey:Id; NOT NULL;"`
+	CreatedBy uint
 }
 
 
-func (table *Task) TableName() string {
+type TaskInterface interface {
+	TableName() string
+	Create() (err error)
+	Get(id string) (err error)
+	Update() (err error)
+	Delete(id string) (err error)
+}
+
+
+func (task *Task) TableName() string {
 	return "task"
 }
 
 
-func GetAllTasks(task *[]Task) (err error) {
-	if err = Config.DB.Find(task).Error; err != nil {
-		return err
-	}
-
-	return nil
-}
-
-
-func CreateTask(task *Task) (err error) {
+func (task *Task) Create() (err error) {
 	if err = Config.DB.Create(task).Error; err != nil {
 		return err
 	}
@@ -40,7 +41,7 @@ func CreateTask(task *Task) (err error) {
 }
 
 
-func GetATask(task *Task, id string) (err error) {
+func (task *Task) Get(id string) (err error) {
 	if err = Config.DB.Where("id = ?", id).First(task).Error; err != nil {
 		return err
 	}
@@ -49,15 +50,24 @@ func GetATask(task *Task, id string) (err error) {
 }
 
 
-func UpdateATask(task *Task) (err error) {
+func (task *Task) Update() (err error) {
 	Config.DB.Save(task)
 
 	return nil
 }
 
 
-func DeleteATask(task *Task, id string) (err error) {
+func (task *Task) Delete(id string) (err error) {
 	Config.DB.Where("id = ?", id).Delete(task)
+
+	return nil
+}
+
+
+func GetAllTasks(task *[]Task) (err error) {
+	if err = Config.DB.Find(task).Error; err != nil {
+		return err
+	}
 
 	return nil
 }

@@ -14,11 +14,17 @@ import (
 	"./Routes"
 )
 
+
 var err error
+
 
 func main() {
 	// DB setup with MySQL
 	Config.DB, err = gorm.Open("mysql", Config.DbURL(Config.BuildDBConfig()))
+
+	// Environment variable setup
+	os.Setenv("PORT", "8080")
+	os.Setenv("SECRET_KEY", "PvqcWtGg3OB6wvQSIqqsLfQ9uYV8jMaD")
 
 	// If any error found
 	if err != nil {
@@ -40,5 +46,5 @@ func main() {
 	router := Routes.SetupRouter()
 
 	// listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
-	router.Run(":8080")
+	router.Run(":"+ os.Getenv("PORT"))
 }

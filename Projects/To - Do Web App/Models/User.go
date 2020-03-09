@@ -2,9 +2,9 @@ package Models
 
 import (
 	"github.com/jinzhu/gorm"
-	//"golang.org/x/crypto/bcrypt"
 
 	"../Config"
+	"../Helpers"
 )
 
 
@@ -21,26 +21,23 @@ type User struct {
 }
 
 
+type UserInterface interface {
+	TableName() string
+	Create() (err error)
+	GetByEmail(email string) (err error)
+}
+
 func (user *User) TableName() string{
 	return "user"
 }
 
-//func GetHashedPassword(password string) (string, error) {
-//	bytes, err := bcrypt.GenerateFromPassword([]bytes(password), 14)
-//
-//	return string(bytes), err
-//}
-//
-//
-//func VerifyPassword(hashedPassword, rawPassword string) bool {
-//	err := bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(rawPassword))
-//
-//	return err == nil
-//}
 
-func CreateUser(user *User) (err error) {
+func (user *User) Create() (err error) {
 	// This will create a atomic transaction
 	txn := Config.DB.Begin()
+
+	// Update raw password to Hashed password before storing to DB
+	user.Password, _ = Helpers.GetHashedPassword(user.Password)
 
 	err = txn.Create(&user).Error
 
@@ -56,17 +53,8 @@ func CreateUser(user *User) (err error) {
 }
 
 
-func GetAllUsers(users *[]User) (err error) {
-	if err := Config.DB.Find(&users).Error; err != nil {
-		return err
-	}
-
-	return nil
-}
-
-
-func GetAUser(user *User, id uint) (err error) {
-	if err = Config.DB.Where("id = ?", id).First(&user).Error; err != nil {
+func (user *User) GetByEmail(email string) (err error) {
+	if err = Config.DB.Where("email = ?", email).First(&user).Error; err != nil {
 		return err
 	}
 

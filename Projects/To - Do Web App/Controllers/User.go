@@ -6,20 +6,23 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"../Models"
+	"../Services"
 )
 
 
 func CreateUser(req *gin.Context) {
 	var user Models.User
 
-	req.Bind(&user)
+	if err := req.Bind(&user); err != nil {
+		return
+	}
 
-	err := Models.CreateUser(&user)
+	err := user.Create()
 
 	if err != nil {
 		req.AbortWithStatus(http.StatusBadRequest)
 	} else {
-		req.JSON(http.StatusOK, user)
+		req.JSON(http.StatusCreated, user)
 	}
 }
 
@@ -27,7 +30,7 @@ func CreateUser(req *gin.Context) {
 func GetAllUsers(req *gin.Context) {
 	var users []Models.User
 
-	err := Models.GetAllUsers(&users)
+	err := Services.GetAllUsers(&users)
 
 	if err != nil {
 		req.AbortWithStatus(http.StatusBadRequest)
@@ -35,3 +38,10 @@ func GetAllUsers(req *gin.Context) {
 		req.JSON(http.StatusOK, users)
 	}
 }
+
+//
+//func GetProfile(req *gin.Context) {
+//	var user Models.User
+//
+//
+//}

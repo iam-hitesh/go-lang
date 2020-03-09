@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"../Controllers"
+	"../Services"
 )
 
 
@@ -16,6 +17,11 @@ func SetupRouter() *gin.Engine {
 		v1.GET("about", Controllers.About)
 
 		v1.POST("user/create", Controllers.CreateUser)
+		v1.POST("login", Controllers.Login)
+	}
+
+	v1.Use(Services.TokenAuthMiddleware())
+	{
 		v1.GET("user", Controllers.GetAllUsers)
 
 		v1.POST("task/create", Controllers.CreateTask)
