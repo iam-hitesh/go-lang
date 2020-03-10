@@ -22,6 +22,7 @@ func SetupRouter() *gin.Engine {
 
 	v1.Use(Services.TokenAuthMiddleware())
 	{
+		v1.GET("profile", Controllers.GetUserProfile)
 		v1.GET("user", Controllers.GetAllUsers)
 
 		v1.POST("task/create", Controllers.CreateTask)

@@ -39,9 +39,17 @@ func GetAllUsers(req *gin.Context) {
 	}
 }
 
-//
-//func GetProfile(req *gin.Context) {
-//	var user Models.User
-//
-//
-//}
+
+func GetUserProfile(req *gin.Context) {
+	user := req.MustGet("currentUser")
+	currentUser := user.(map[string]interface{})
+
+	var User Models.User
+	User.GetByEmail(currentUser["Email"].(string))
+
+	User.Password = ""
+
+	req.JSON(http.StatusOK, gin.H{
+		"user": User,
+	})
+}

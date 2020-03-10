@@ -32,7 +32,7 @@ type Header struct {
 
 func GenerateToken(user *Models.User) string {
 	// We will kept it for next 5 Minutes
-	expirationTime := time.Now().Add(5 * time.Minute)
+	expirationTime := time.Now().Add(500 * time.Minute)
 
 	// Declare the token with the algorithm used for signing, and the claims
 	token := jwt.NewWithClaims(jwt.SigningMethodHS512, &Claims{
@@ -53,7 +53,7 @@ func GenerateToken(user *Models.User) string {
 }
 
 
-func ParseAndValidateToken(tokenString string) (user *Claims) {
+func ParseAndValidateToken(tokenString string) map[string]interface{} {
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		// Don't forget to validate the alg is what you expect:
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
@@ -65,11 +65,11 @@ func ParseAndValidateToken(tokenString string) (user *Claims) {
 	})
 
 	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
-		User := &Claims{
-			Email:          claims["email"].(string),
-			IsActive:       claims["IsActive"].(bool),
-			Role:           int(claims["Role"].(float64)),
-			IsAdmin:        claims["IsAdmin"].(bool),
+		User := map[string]interface{}{
+			"Email":          claims["email"].(string),
+			"IsActive":       claims["IsActive"].(bool),
+			"Role":           int(claims["Role"].(float64)),
+			"IsAdmin":        claims["IsAdmin"].(bool),
 		}
 
 		return User
@@ -101,7 +101,6 @@ func TokenAuthMiddleware() gin.HandlerFunc {
 			return
 		}
 
-
 		jwtToken := tokenSlice[1]
 		user := ParseAndValidateToken(jwtToken)
 
@@ -116,6 +115,7 @@ func TokenAuthMiddleware() gin.HandlerFunc {
 			return
 		}
 
+		req.Set("currentUser", user)
 		req.Next()
 	}
 }

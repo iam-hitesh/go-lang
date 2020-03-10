@@ -19,6 +19,14 @@ func CreateTask(req *gin.Context) {
 		return
 	}
 
+	user := req.MustGet("currentUser")
+	currentUser := user.(map[string]interface{})
+
+	var User Models.User
+	User.GetByEmail(currentUser["Email"].(string))
+	
+	task.CreatedBy = User.ID
+
 	err := task.Create()
 
 	if err != nil {

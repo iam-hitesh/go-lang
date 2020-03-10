@@ -30,14 +30,19 @@ func Login (req *gin.Context) {
 	var existingUser Models.User
 
 	if err := req.Bind(&user); err != nil {
+		req.Abort()
+
 		return
 	}
 
 	// Will check if any existing user or not and returns
 	if err := existingUser.GetByEmail(user.Email); err != nil {
+		req.Abort()
+
 		req.JSON(http.StatusBadRequest, gin.H{
 			"error": "User Doesn't exist",
 		})
+
 		return
 	}
 
