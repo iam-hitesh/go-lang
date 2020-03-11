@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"../Models"
+	"../Services"
 )
 
 
@@ -19,13 +20,9 @@ func CreateTask(req *gin.Context) {
 		return
 	}
 
-	user := req.MustGet("currentUser")
-	currentUser := user.(map[string]interface{})
+	currentUser := (req.MustGet("currentUser")).(map[string]interface{})
 
-	var User Models.User
-	User.GetByEmail(currentUser["Email"].(string))
-	
-	task.CreatedBy = User.ID
+	task.CreatedBy = uint(currentUser["ID"].(float64))
 
 	err := task.Create()
 
@@ -39,10 +36,20 @@ func CreateTask(req *gin.Context) {
 
 func GetATask(req *gin.Context) {
 	var task Models.Task
+	currentUser := (req.MustGet("currentUser")).(map[string]interface{})
 
 	id := req.Params.ByName("id")
 
 	err := task.Get(id)
+
+	if task.CreatedBy != uint(currentUser["ID"].(float64)){
+		req.Abort()
+		req.JSON(http.StatusUnauthorized, gin.H{
+			"message": "Not accessed by other than created by",
+		})
+
+		return
+	}
 
 	if err != nil {
 		req.AbortWithStatus(http.StatusNotFound)
@@ -54,13 +61,28 @@ func GetATask(req *gin.Context) {
 
 func UpdateATask(req *gin.Context) {
 	var task Models.Task
+	currentUser := (req.MustGet("currentUser")).(map[string]interface{})
 
 	id := req.Params.ByName("id")
 
 	err := task.Get(id)
 
 	if err != nil {
-		req.JSON(http.StatusNotFound, task)
+		req.Abort()
+		req.JSON(http.StatusNotFound, gin.H{
+			"message": "Task not found",
+		})
+
+		return
+	}
+
+	if task.CreatedBy != uint(currentUser["ID"].(float64)){
+		req.Abort()
+		req.JSON(http.StatusUnauthorized, gin.H{
+			"message": "You are not authorized to update this task",
+		})
+
+		return
 	}
 
 	req.BindJSON(&task)
@@ -76,10 +98,11 @@ func UpdateATask(req *gin.Context) {
 
 func DeleteATask(req *gin.Context) {
 	var task Models.Task
+	currentUser := (req.MustGet("currentUser")).(map[string]interface{})
 
 	id := req.Params.ByName("id")
 
-	err := task.Delete(id)
+	err := task.Delete(id, uint(currentUser["ID"].(float64)))
 
 	if err != nil {
 		req.AbortWithStatus(http.StatusNotFound)
@@ -91,8 +114,9 @@ func DeleteATask(req *gin.Context) {
 
 func GetAllTasks(req *gin.Context) {
 	var tasks []Models.Task
+	currentUser := (req.MustGet("currentUser")).(map[string]interface{})
 
-	err := Models.GetAllTasks(&tasks)
+	err := Services.GetAllTasks(&tasks, uint(currentUser["ID"].(float64)))
 
 	if err != nil {
 		req.AbortWithStatus(http.StatusBadRequest)

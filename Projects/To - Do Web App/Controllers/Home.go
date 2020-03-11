@@ -48,7 +48,7 @@ func Login (req *gin.Context) {
 
 	if Helpers.VerifyPassword(existingUser.Password, user.Password) {
 		req.JSON(http.StatusOK, gin.H{
-			"token": Services.GenerateToken(&user),
+			"token": Services.GenerateToken(&existingUser),
 		})
 	} else {
 		req.JSON(http.StatusOK, gin.H{

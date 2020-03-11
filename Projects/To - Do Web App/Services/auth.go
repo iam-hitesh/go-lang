@@ -16,6 +16,7 @@ import (
 
 
 type Claims struct {
+	ID uint `json:"ID"`
 	Email string `json:"email"`
 	IsActive bool `json:"IsActive"`
 	Role int `json:"Role"`
@@ -36,6 +37,7 @@ func GenerateToken(user *Models.User) string {
 
 	// Declare the token with the algorithm used for signing, and the claims
 	token := jwt.NewWithClaims(jwt.SigningMethodHS512, &Claims{
+		ID: user.ID,
 		Email: user.Email,
 		IsActive: user.IsActive,
 		Role: user.Role,
@@ -66,6 +68,7 @@ func ParseAndValidateToken(tokenString string) map[string]interface{} {
 
 	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
 		User := map[string]interface{}{
+			"ID":			  claims["ID"].(float64),
 			"Email":          claims["email"].(string),
 			"IsActive":       claims["IsActive"].(bool),
 			"Role":           int(claims["Role"].(float64)),

@@ -57,17 +57,8 @@ func (task *Task) Update() (err error) {
 }
 
 
-func (task *Task) Delete(id string) (err error) {
-	Config.DB.Where("id = ?", id).Delete(task)
-
-	return nil
-}
-
-
-func GetAllTasks(task *[]Task) (err error) {
-	if err = Config.DB.Find(task).Error; err != nil {
-		return err
-	}
+func (task *Task) Delete(id string, createdBy uint) (err error) {
+	Config.DB.Where("id = ? and created_by = ?", id, createdBy).Delete(task)
 
 	return nil
 }
