@@ -12,3 +12,6 @@ Learn Go Programming language, A repository which aims to explain and implement 
 - https://gin-gonic.com/docs
 - https://gowebexamples.com/
 - https://chenyitian.gitbooks.io/gin-tutorials/
+
+
+## Suggestions and contributions are welcome
